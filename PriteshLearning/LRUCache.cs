@@ -24,7 +24,7 @@ namespace PriteshLearning
     }
 
     public class LRUCache
-    {
+    { 
         private int count;
         private int capacity;
         private LRUNode head;
@@ -40,7 +40,7 @@ namespace PriteshLearning
 
             head.next = tail;
             tail.pre = head;
-
+            
             head.pre = null;
             tail.next = null;
 
@@ -105,11 +105,11 @@ namespace PriteshLearning
             }            
         }
 
-        static void Main()
-        {
-            LRUCache obj = new LRUCache(1);
-            obj.Put(2, 1);
-            Console.WriteLine(obj.Get(2));
-        }
+        //static void Main()
+        //{
+        //    LRUCache obj = new LRUCache(1);
+        //    obj.Put(2, 1);
+        //    Console.WriteLine(obj.Get(2));
+        //}
     }
 }
