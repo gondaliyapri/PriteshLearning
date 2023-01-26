@@ -86,17 +86,17 @@ namespace PriteshLearning
             }
         }
 
-        static void Main()
-        {
-            CircularLinkedList list = new CircularLinkedList();
-            list.AddLast(7);
-            list.AddLast(4);
-            list.AddLast(12);
-            list.AddLast(8);
-            list.AddLast(3);
-            Console.WriteLine("Size: " + list.Length());
-            list.Display();
-            Console.ReadLine();
-        }
+        //static void Main()
+        //{
+        //    CircularLinkedList list = new CircularLinkedList();
+        //    list.AddLast(7);
+        //    list.AddLast(4);
+        //    list.AddLast(12);
+        //    list.AddLast(8);
+        //    list.AddLast(3);
+        //    Console.WriteLine("Size: " + list.Length());
+        //    list.Display();
+        //    Console.ReadLine();
+        //}
     }
 }
