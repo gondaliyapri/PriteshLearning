@@ -9,48 +9,68 @@ namespace PriteshLearning
 {
     public class LRUNode
     {
-        public int Key;
-        public int Value;
+        public int val;
+        public int key;
         public LRUNode next;
-        public LRUNode prev;
+        public LRUNode pre;
 
-        public LRUNode(int key, int val, LRUNode next = null, LRUNode prev = null)
+        public LRUNode(int val, int key, LRUNode next = null, LRUNode pre = null)
         {
-            this.Key = key;
-            this.Value = val;
+            this.val = val;
+            this.key = key;
             this.next = next;
-            this.prev = prev;
+            this.pre = pre;
         }
     }
 
     public class LRUCache
     {
-        private Dictionary<int, LRUNode> map;
-        private int size;
+        private int count;
+        private int capacity;
         private LRUNode head;
         private LRUNode tail;
-        private int capacity;
+        private Dictionary<int, LRUNode> map;
+
         public LRUCache(int capacity)
         {
             this.capacity = capacity;
-            this.head = new LRUNode(0, 0);
-            this.tail = new LRUNode(0, 0);
+            count = 0;
+            head = new LRUNode(0, 0);
+            tail = new LRUNode(0, 0);
+
             head.next = tail;
-            tail.prev = head;
-            head.prev = null;
+            tail.pre = head;
+
+            head.pre = null;
             tail.next = null;
-            size = 0;
-            this.map = new Dictionary<int, LRUNode>();
+
+            map = new Dictionary<int, LRUNode>();
+        }
+
+        public void AddHead(LRUNode node)
+        {
+            node.next = head.next;
+            head.next = node;
+            node.pre = head;
+            node.next.pre = node;
+        }
+
+        public void RemoveNode(LRUNode node)
+        {
+            node.pre.next = node.next;
+            node.next.pre = node.pre;
         }
 
         public int Get(int key)
         {
             if (map.ContainsKey(key))
             {
-                LRUNode LRUNode = map[key];
-                int result = LRUNode.Value;
-                RemoveLRUNode(LRUNode);
-                AddLRUNodeHead(LRUNode);
+                var node = map[key];
+                var result = node.val;
+
+                RemoveNode(node);
+                AddHead(node);
+
                 return result;
             }
 
@@ -61,56 +81,35 @@ namespace PriteshLearning
         {
             if (map.ContainsKey(key))
             {
-                var LRUNode = map[key];
-                LRUNode.Value = value;
-                RemoveLRUNode(LRUNode);
-                AddLRUNodeHead(LRUNode);
+                var node = map[key];
+                node.val = value;
+                RemoveNode(node);
+                AddHead(node);
             }
             else
             {
-                var LRUNode = new LRUNode(key, value);
-                map.Add(key, LRUNode);
+                LRUNode node = new LRUNode(value, key);
+                map.Add(key, node);
 
-                if (size >= capacity)
+                if (count < capacity)
                 {
-                    map.Remove(tail.prev.Key);
-                    RemoveLRUNode(tail.prev);
-                    AddLRUNodeHead(LRUNode);
+                    count++;
+                    AddHead(node);
                 }
                 else
                 {
-                    size++;
-                    AddLRUNodeHead(LRUNode);
+                    map.Remove(tail.pre.key);
+                    RemoveNode(tail.pre);
+                    AddHead(node);
                 }
-            }
-        }
-
-        private void RemoveLRUNode(LRUNode LRUNode)
-        {
-            LRUNode.prev.next = LRUNode.next;
-            LRUNode.next.prev = LRUNode.prev;
-        }
-
-        private void AddLRUNodeHead(LRUNode LRUNode)
-        {
-            LRUNode.next = head.next;
-            LRUNode.next.prev = LRUNode;
-            LRUNode.prev = head;
-            head.next = LRUNode;
+            }            
         }
 
         static void Main()
         {
-            LRUCache obj = new LRUCache(2);
-            obj.Put(1, 1);
-            obj.Put(2, 2);
-            Console.WriteLine(obj.Get(1));
-            obj.Put(3, 3);
+            LRUCache obj = new LRUCache(1);
+            obj.Put(2, 1);
             Console.WriteLine(obj.Get(2));
-            obj.Put(4, 4);
-            Console.WriteLine(obj.Get(1));
-            Console.WriteLine(obj.Get(3));
-            Console.WriteLine(obj.Get(4));
         }
     }
 }
